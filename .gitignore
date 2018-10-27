@@ -2,6 +2,7 @@
 build_logs/
 node_modules/
 static/
+data/
 .env
 .dotenv
 .idea

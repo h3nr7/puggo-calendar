@@ -3,34 +3,41 @@ const expressSession = require('express-session');
 const passport = require('passport');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
-const StravaStrategy = require('./auth/StravaStrategy');
-
+const methodOverride = require('method-override');
+const StravaOAuth = require('./helper/StravaOAuth');
+const appInfo = require('../package.json');
+const { name, version } = appInfo;
+const { apiErrorHandler } = require('./helper/errorHandler');
 
 if(process.env.NODE_ENV !== 'production') {
   require('dotenv').config();
 }
 
-const stravaStrategy = StravaStrategy(passport);
+// OAUTH STRATEGY
+StravaOAuth(passport);
 
+// INITIALISE EXPRESS
 const app = express();
-
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(expressSession({
-  secret: 'keyboard cat', resave: false, saveUninitialized: false
+  secret: process.env.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: false
 }));
-
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.get('/oauth/strava', passport.authenticate('oauth2'));
+// CONTROLLERS
+app.use(require('./controller'));
 
-app.get('/oauth/strava/callback',
-  passport.authenticate('oauth2', { failureRedirect: '/login' }),
-  function(req, res) {
-    // Successful authentication, redirect home.
-    res.send(`<p>success! ${JSON.stringify(res)}</p>`);
-  });
+// ERROR HANDLER AND LOGGERS
+app.use(methodOverride());
+app.use(apiErrorHandler);
 
 
-  app.listen(4000);
+// INIT APP
+app.listen(process.env.PORT, function() {
+  console.log(`:: ${name} v${version} - Initialised at port ${process.env.PORT} `);
+});

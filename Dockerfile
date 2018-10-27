@@ -14,8 +14,8 @@ RUN yes | cp -rf /tmp/node_modules /app/
 WORKDIR /app
 
 ENV NODE_ENV=development
-ENV PORT=4000
+ENV PORT=3333
 
-EXPOSE 4000
+EXPOSE 3333
 
 CMD ["npm", "run", "start"]
