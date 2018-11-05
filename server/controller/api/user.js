@@ -1,21 +1,23 @@
-const express = require('express'),
-      router = express.Router();
 const { getStravaUserProfile } = require('../../service/stravaApi');
+const { UserModel } = require('../../model/User');
 
-router.get('/profile', function(req, res, next) {
+exports.getUserProfile = function(req, res, next) {
   const { accessToken } = req.user || {};
-  console.log('access', accessToken);
   return getStravaUserProfile(accessToken)
     .then(function(obj) {
       const { data } = obj || {};
-      console.log('meme', data);
-      
-      res.json(data);
+      const { id, firstname, lastname, username } = data || {};
+      console.log('am I called', id, firstname, lastname, username);
+      UserModel.findOrCreate({id}, {firstname, lastname, username}, {}, function(err, user, created){
+        console.log('I am called man:', err, user, created);
+      });
     })
     .catch(function(err) {
       console.log(err);
       next(err);
     });
-});
+};
 
-module.exports = router;
+exports.saveUserProfile = function(req, res, next) {
+
+};

@@ -7,7 +7,9 @@ router.get('/strava', passport.authenticate('strava', { scope: ['public'] }));
 
 router.get('/strava/callback',
   passport.authenticate('strava', { failureRedirect: '/login' }),
-  function(req, res) { res.redirect('/');
-});
+  function(req, res) {
+    res.redirect('/');
+  }
+);
 
 module.exports = router;

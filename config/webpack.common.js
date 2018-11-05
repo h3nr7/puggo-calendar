@@ -12,7 +12,7 @@ const webpackConfig = {
       "babel-polyfill",
       APP_DIR + '/client/src/index.js'
     ],
-    vendor: ["mixpanel-browser"]
+    // vendor: []
   },
   output: {
     path: BUILD_DIR,

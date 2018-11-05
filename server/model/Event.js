@@ -7,7 +7,7 @@ const Schema = new mongoose.Schema({
   endDate: Date
 });
 
-const Model = mongoose.model('EventModel', Schema);
+const Model = mongoose.model('Event', Schema);
 
 module.exports = {
   EventModel: Model,

@@ -8,33 +8,30 @@ const StravaOAuth = require('./helper/StravaOAuth');
 const appInfo = require('../package.json');
 const { name, version } = appInfo;
 const { apiErrorHandler } = require('./helper/errorHandler');
-const { setAuthHeader } = require('./middleware/auth/header');
-
-if(process.env.NODE_ENV !== 'production') {
-  require('dotenv').config();
-}
+const { setAuthHeader } = require('./middleware/auth');
+const { redisSession } = require('./middleware/redis');
+const { initDB } = require('./model');
 
 // OAUTH STRATEGY
 StravaOAuth(passport);
 
+// INITIALISE DB
+initDB();
 // INITIALISE EXPRESS
 const app = express();
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cookieParser());
-app.use(expressSession({
-  secret: process.env.SESSION_SECRET,
-  resave: false,
-  saveUninitialized: false
-}));
+
+app.use(redisSession);
 app.use(passport.initialize());
 app.use(passport.session());
 
 app.use(setAuthHeader);
 
-// CONTROLLERS
-app.use(require('./controller'));
+// ROUTES
+app.use(require('./router'));
 
 // WEB SERVER
 if(process.env.NODE_ENV==='development') {

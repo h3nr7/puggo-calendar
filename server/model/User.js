@@ -1,13 +1,19 @@
 const mongoose = require('mongoose');
+const findOrCreate = require('mongoose-findorcreate');
 
 const Schema = new mongoose.Schema({
-  name: String,
-  description: String,
-  startDate: Date,
-  endDate: Date
+  id: String,
+  username: String,
+  firstname: String,
+  lastname: String,
+  created_at: Date,
+  modified_at: Date
 });
 
-const Model = mongoose.model('UserModel', Schema);
+// PLUGIN
+Schema.plugin(findOrCreate);
+
+const Model = mongoose.model('User', Schema);
 
 module.exports = {
   UserModel: Model,

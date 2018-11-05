@@ -6,3 +6,10 @@ exports.setAuthHeader = function(req, res, next) {
   res.setHeader("Authorization", `Bearer ${accessToken || ''}`);
   return next();
 };
+
+exports.isApiLoggedIn = function(req, res, next) {
+  if(req.isAuthenticated()) {
+    return next();
+  }
+  next({status: 401, message: 'Action not autorised'});
+};
