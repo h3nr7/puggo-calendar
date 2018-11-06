@@ -6,8 +6,8 @@ const Schema = new mongoose.Schema({
   username: String,
   firstname: String,
   lastname: String,
-  created_at: Date,
-  modified_at: Date
+  created_at: { type: Date },
+  modified_at: { type: Date, default: Date.now }
 });
 
 // PLUGIN
