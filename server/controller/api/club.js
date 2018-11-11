@@ -1,5 +1,6 @@
 const { getClubById } = require('../../service/stravaApi');
-const { ClubModel } = require('../../model/CLub');
+const { ClubModel } = require('../../model/Club');
+const { modelPromiseCatch } = require('../../helper/errorHandler');
 
 
 exports.findAndUpdateClub = function(req, res, next) {
@@ -21,7 +22,6 @@ exports.findAndUpdateClub = function(req, res, next) {
         cover_photo_small, sport_type, city, state, country}, {});
     })
     .then(function(obj){
-      console.log('kaka', obj);
       const { doc, created } = obj || {};
       let updateObj = { modified_at: curDate };
       if(created) updateObj = { created_at: curDate, updateObj };
@@ -39,8 +39,5 @@ exports.findAndUpdateClub = function(req, res, next) {
       };
       next(null);
     })
-    .catch(function(err) {
-      console.error(err);
-      next(err);
-    });
+    .catch(modelPromiseCatch(next));
 };

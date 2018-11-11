@@ -11,3 +11,24 @@ exports.apiSuccessHandler = function(req, res) {
   const { status, data } = response;
   res.status(status).json(data);
 };
+
+
+exports.modelCreatePromiseThen = function(req, next) {
+  return function(doc) {
+    req.response = {
+      status: 201,
+      data: doc
+    };
+    next(null);
+  };
+};
+
+exports.modelGetPromiseThen = function(req, next) {
+  return function(doc) {
+    req.response = {
+      status: 200,
+      data: doc
+    };
+    next(null);
+  };
+};

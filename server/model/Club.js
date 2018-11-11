@@ -19,9 +19,9 @@ const Schema = new mongoose.Schema({
 // PLUGIN
 Schema.plugin(findOrCreate);
 
-const Model = mongoose.model('Club', Schema);
+const ClubModel = mongoose.models.Club || mongoose.model('Club', Schema);
 
 module.exports = {
-  ClubModel: Model,
+  ClubModel,
   ClubSchema: Schema
 };

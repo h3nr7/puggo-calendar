@@ -1,20 +1,40 @@
 const mongoose = require('mongoose');
 const arrayUniquePlugin = require('mongoose-unique-array');
+const { ImageSchema, LocationSchema } = require('./BaseSchemas');
+const { ObjectId } = mongoose.Schema.Types;
+
+const EventTypeSchema = new mongoose.Schema({
+  title: String,
+  description: String
+});
 
 const Schema = new mongoose.Schema({
-  name: String,
+  title: { type: String, required: true},
   description: String,
-  users: [{type: String, unique: true}],
-  club: String,
+  location: LocationSchema,
+  cover_photo: ImageSchema,
+  cover_photo_small: ImageSchema,
+  album: [ImageSchema],
+  sport: {type: ObjectId, ref: 'Sport'},
+  type: EventTypeSchema,
+  tags: [String],
+  users: [{type: ObjectId, ref: 'User', unique: true, sparse: true}],
+  moderators: [{type: ObjectId, ref: 'User', unique: true, sparse: true}],
+  admin: {type: ObjectId, ref: 'User', required: true},
+  club: {type: ObjectId, ref: 'Club'},
   start_date: Date,
-  end_date: Date
+  end_date: Date,
+  isDraft: {type: Boolean, default: true},
+  isPublic: {type: Boolean, default: true},
+  created_at: { type: Date },
+  modified_at: { type: Date, default: Date.now }
 });
 
 Schema.plugin(arrayUniquePlugin);
 
-const Model = mongoose.model('Event', Schema);
+const EventModel = mongoose.models.Event || mongoose.model('Event', Schema);
 
 module.exports = {
-  EventModel: Model,
+  EventModel,
   EventSchema: Schema
 };

@@ -7,7 +7,10 @@ const Schema = new mongoose.Schema({
   username: String,
   firstname: String,
   lastname: String,
-  clubs: [{type: String, unique: true}],
+  profile: String,
+  profile_medium: String,
+  authType: {type: String},
+  clubs: [{type: String, unique: true, sparse: true}],
   created_at: { type: Date },
   modified_at: { type: Date, default: Date.now }
 });
@@ -16,9 +19,9 @@ const Schema = new mongoose.Schema({
 Schema.plugin(findOrCreate);
 Schema.plugin(arrayUniquePlugin);
 
-const Model = mongoose.model('User', Schema);
+const UserModel = mongoose.models.User || mongoose.model('User', Schema);
 
 module.exports = {
-  UserModel: Model,
+  UserModel,
   UserSchema: Schema
 };

@@ -1,6 +1,6 @@
 const { getStravaUserProfile } = require('../../service/stravaApi');
 const { UserModel } = require('../../model/User');
-
+const { modelPromiseCatch } = require('../../helper/errorHandler');
 /**
  * get and save user Profile
  * @param  {[type]}   req  [description]
@@ -10,21 +10,14 @@ const { UserModel } = require('../../model/User');
  */
 exports.getUserProfile = function(req, res, next) {
   const { accessToken } = req.user || {};
-  const curDate = new Date();
 
   let stravaProfile = {};
   return getStravaUserProfile(accessToken)
     .then(function(obj) {
       const { data } = obj || {};
+      const { id } = data || {};
       stravaProfile = data;
-      const { id, firstname, lastname, username } = data || {};
-      return UserModel.findOrCreate({id}, {firstname, lastname, username}, {});
-    })
-    .then(function(obj){
-      const { doc, created } = obj || {};
-      let updateObj = { modified_at: curDate };
-      if(created) updateObj = { created_at: curDate, ...updateObj};
-      return UserModel.findOneAndUpdate({id: doc.id}, updateObj);
+      return UserModel.findOne({id});
     })
     .then(function(data) {
       let status = 200;
@@ -33,12 +26,9 @@ exports.getUserProfile = function(req, res, next) {
       }
 
       req.response = {
-        status, data: { ...stravaProfile, ...data }
+        status, data: { ...data.toJSON(), ...stravaProfile }
       };
       next(null);
     })
-    .catch(function(err) {
-      console.error(err);
-      next(err);
-    });
+    .catch(modelPromiseCatch(next));
 };
