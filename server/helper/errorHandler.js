@@ -15,8 +15,8 @@ exports.apiErrorHandler = function(err, req, res, next) {
 
 exports.modelPromiseCatch = function(next) {
   return function(err) {
-    const { errors } = err || {};
+    const { message, errors, status } = err || {};
     console.log('modelPromiseCatch: ', err);
-    next({status: 403, message: errors || err || 'unknown db error'});
+    next({status: status || 403, message: message || errors || err || 'unknown db error'});
   };
 };

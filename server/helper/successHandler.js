@@ -15,6 +15,7 @@ exports.apiSuccessHandler = function(req, res) {
 
 exports.modelCreatePromiseThen = function(req, next) {
   return function(doc) {
+    if(!doc) return Promise.reject({status: 403, message: 'no record created'});
     req.response = {
       status: 201,
       data: doc
@@ -25,6 +26,18 @@ exports.modelCreatePromiseThen = function(req, next) {
 
 exports.modelGetPromiseThen = function(req, next) {
   return function(doc) {
+    if(!doc) return Promise.reject({status: 404, message: 'no record found'});
+    req.response = {
+      status: 200,
+      data: doc
+    };
+    next(null);
+  };
+};
+
+exports.modelUpdatePromiseThen = function(req, next) {
+  return function(doc) {
+    if(!doc) return Promise.reject({status: 404, message: 'no record updated'});
     req.response = {
       status: 200,
       data: doc

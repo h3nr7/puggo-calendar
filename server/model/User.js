@@ -10,7 +10,7 @@ const Schema = new mongoose.Schema({
   profile: String,
   profile_medium: String,
   authType: {type: String},
-  clubs: [{type: String, unique: true, sparse: true}],
+  clubs: [{type: String}],
   created_at: { type: Date },
   modified_at: { type: Date, default: Date.now }
 });

@@ -18,14 +18,14 @@ const Schema = new mongoose.Schema({
   sport: {type: ObjectId, ref: 'Sport'},
   type: EventTypeSchema,
   tags: [String],
-  users: [{type: ObjectId, ref: 'User', unique: true, sparse: true}],
-  moderators: [{type: ObjectId, ref: 'User', unique: true, sparse: true}],
+  users: [{type: ObjectId, ref: 'User'}],
+  moderators: [{type: ObjectId, ref: 'User'}],
   admin: {type: ObjectId, ref: 'User', required: true},
   club: {type: ObjectId, ref: 'Club'},
   start_date: Date,
   end_date: Date,
-  isDraft: {type: Boolean, default: true},
-  isPublic: {type: Boolean, default: true},
+  is_draft: {type: Boolean, default: true},
+  is_public: {type: Boolean, default: true},
   created_at: { type: Date },
   modified_at: { type: Date, default: Date.now }
 });
