@@ -1,4 +1,4 @@
-const { getClubById } = require('../../service/stravaApi');
+const { getClubById, getClubMembers } = require('../../service/stravaApi');
 const { ClubModel } = require('../../model/Club');
 const { modelPromiseCatch } = require('../../helper/errorHandler');
 
@@ -58,4 +58,22 @@ exports.findAndUpdateClub = function(req, res, next) {
       next(null);
     })
     .catch(modelPromiseCatch(next));
+};
+
+exports.getClubMembers = function(req, res, next) {
+  const { accessToken } = req.user || {};
+  const { id } = req.params || {};
+  let { page, per_page } = req.query || {};
+  page = page || 1;
+  per_page = per_page || 50;
+  getClubMembers(accessToken, id, { per_page, page })
+    .then(function(obj) {
+      const { status, data } = obj || {};
+      req.response = {
+        status, data: { page, per_page, members: data }
+      };
+      next(null);
+    })
+    .catch(modelPromiseCatch(next));
+
 };

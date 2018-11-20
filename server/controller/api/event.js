@@ -138,6 +138,7 @@ exports.findAdminEvent = function(req, res, next) {
   const { _id } = user || {};
 
   EventModel.find({admin: _id})
+    .populate('users moderators', 'id username firstname lastname profile_medium profile')
     .then(modelGetPromiseThen(req, next))
     .catch(modelPromiseCatch(next));
 };

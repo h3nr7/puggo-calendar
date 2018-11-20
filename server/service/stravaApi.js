@@ -29,3 +29,15 @@ exports.getClubById = function(accessToken, id) {
     headers
   });
 };
+
+exports.getClubMembers = function(accessToken, id, params={}) {
+  if(!accessToken) return Promise.reject();
+  const headers = __constructHeader({accessToken});
+
+  return axios({
+    method: 'get',
+    url: `${URL}/clubs/${id}/members`,
+    headers,
+    params
+  });
+};

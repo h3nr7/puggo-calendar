@@ -1,6 +1,6 @@
 const express = require('express'),
       router = express.Router();
-const { findAndUpdateClub } = require('../../controller/api/club');
+const { findAndUpdateClub, getClubMembers } = require('../../controller/api/club');
 const { apiSuccessHandler } = require('../../helper/successHandler');
 
 /**
@@ -9,4 +9,5 @@ const { apiSuccessHandler } = require('../../helper/successHandler');
  */
 router.get('/:id', findAndUpdateClub, apiSuccessHandler);
 
+router.get('/:id/members', getClubMembers, apiSuccessHandler);
 module.exports = router;
