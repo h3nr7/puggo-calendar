@@ -21,6 +21,9 @@ exports.createEvent = function(req, res, next) {
     .catch(modelPromiseCatch(next));
 };
 
+/**
+  *  get event
+  */
 exports.getEvents = function(req, res, next) {
   const { query, user } = req || {};
 
@@ -30,6 +33,29 @@ exports.getEvents = function(req, res, next) {
     .catch(modelPromiseCatch(next));
 };
 
+/**
+  * delete event
+  */
+exports.deleteAnEvent = function(req, res, next) {
+  const { params, user } = req || {};
+  const { eventId } = params || {};
+  const { _id } = user || {};
+
+  EventModel.deleteOne({ admin: _id, _id: eventId })
+    .then(function(doc) {
+      const { admin, is_public, is_draft } = doc || {};
+      if(admin && admin.toString() !== _id) {
+        if(!is_public || is_draft) return Promise.reject('user permission denied');
+      }
+      return Promise.resolve(doc);
+    })
+    .then(modelGetPromiseThen(req, next))
+    .catch(modelPromiseCatch(next));
+};
+
+/**
+  * update event
+  */
 exports.updateEvent = function(req, res, next) {
   const { body, params, user } = req || {};
   const { eventId } = params || {};

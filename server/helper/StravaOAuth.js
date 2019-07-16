@@ -1,6 +1,9 @@
 const { Strategy } = require('passport-strava-oauth2');
 const { UserModel } = require('../model/User');
 
+/**
+  Strava oauth
+*/
 function StravaOAuth(passport) {
   passport.use(new Strategy({
     clientID: process.env.CLIENT_ID,
@@ -10,6 +13,9 @@ function StravaOAuth(passport) {
     return cb(null, {accessToken, refreshToken, profile});
   }));
 
+  /**
+    Serialise user
+    */
   passport.serializeUser(function(user, cb) {
     process.nextTick(function() {
       const { _json } = user.profile || {};
@@ -37,6 +43,9 @@ function StravaOAuth(passport) {
     });
   });
 
+  /**
+    deserialise
+    */
   passport.deserializeUser(function(obj, cb) {
     cb(null, obj);
   });

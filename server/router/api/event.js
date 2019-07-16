@@ -1,7 +1,7 @@
 const express = require('express'),
       router = express.Router();
 const {
-  createEvent, getEvents, findAnEvent,
+  createEvent, getEvents, findAnEvent, deleteAnEvent,
   findAdminEvent, updateEvent, addEventUser, addEventModerator
 } = require('../../controller/api/event');
 const { apiSuccessHandler } = require('../../helper/successHandler');
@@ -14,6 +14,8 @@ router.get('/', getEvents, apiSuccessHandler);
 router.get('/mine', findAdminEvent, apiSuccessHandler);
 // get event by id
 router.get('/:eventId', findAnEvent, apiSuccessHandler);
+// delete an event by id
+router.delete('/:eventId', deleteAnEvent, apiSuccessHandler);
 // update event by id
 router.put('/:eventId', updateEvent, apiSuccessHandler);
 // add user to event
